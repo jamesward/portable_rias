@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:local="*"
+  applicationComplete="srv.send()">
+  
+  <mx:HTTPService id="srv" url="http://localhost:8080/data.jsp"/>
+  
+  <local:Dashboard width="100%" height="100%" dataProvider="{srv.lastResult.list.month}"/>
+  
+</mx:Application>

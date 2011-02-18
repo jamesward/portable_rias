@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:portablerias="com.jamesward.portablerias.*" xmlns:local="*"
+  styleName="plain" paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6">
+
+  <portablerias:PDFCacheManager id="pdfCacheManager" url="http://ws.jamesward.com/data.php" fault="mx.controls.Alert.show(event.fault.message)"/>
+  <portablerias:CreatePDFService id="createPDFService"/>
+
+  <mx:applicationComplete>
+  if (pdfCacheManager.inPDF)
+  {
+    pdfCacheManager.getDataFromCache();
+  }
+  else
+  {
+    pdfCacheManager.getDataFromServer();
+  }
+  </mx:applicationComplete>
+  
+  <mx:ApplicationControlBar dock="true">
+    <mx:Button label="Update Data">
+      <mx:click>
+      pdfCacheManager.getDataFromServer();
+      </mx:click>
+    </mx:Button>
+    <mx:Button label="Create PDF" visible="{!pdfCacheManager.inPDF}" includeInLayout="{!pdfCacheManager.inPDF}">
+      <mx:click>
+      createPDFService.generatePDF(pdfCacheManager.lastXMLResult);
+      </mx:click>
+    </mx:Button>
+    <mx:Button label="View Full Screen" visible="{pdfCacheManager.inPDF &amp;&amp; pdfCacheManager.inBrowser == false}"
+      includeInLayout="{pdfCacheManager.inPDF &amp;&amp; pdfCacheManager.inBrowser == false}">
+      <mx:click>
+      ExternalInterface.call("eval", "app.fullscreen = true;");
+      </mx:click>
+    </mx:Button>
+  </mx:ApplicationControlBar>
+  
+  <local:Dashboard width="100%" height="100%"
+    dataProvider="{pdfCacheManager.lastResult.list.month as mx.collections.ArrayCollection}"/>
+  
+</mx:Application>
